@@ -1,13 +1,14 @@
 package com.dh.clinica.clinica.service;
 
+import com.dh.clinica.clinica.model.Domicilio;
 import com.dh.clinica.clinica.model.Paciente;
+import com.dh.clinica.clinica.model.dto.DomicilioDto;
 import com.dh.clinica.clinica.model.dto.PacienteDto;
 import com.dh.clinica.clinica.repository.PacienteRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,63 +21,86 @@ public class PacienteService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-//    @Autowired
-//    private DomicilioService domicilioService;
+    @Autowired
+    private DomicilioService domicilioService;
 
     public PacienteDto buscarPorId(Long id) {
 
         Paciente paciente = pacienteRepository.findById(id).orElse(null);
 
         PacienteDto pacienteDto = null;
+        DomicilioDto domicilioDto = null;
 
         if (paciente != null) {
 
             LOGGER.info("Se crea DTO");
 
             pacienteDto = new PacienteDto();
+            domicilioDto = new DomicilioDto();
 
+
+            domicilioDto.setCalle(paciente.getDomicilio().getCalle());
+            domicilioDto.setNumero(paciente.getDomicilio().getNumero());
+            domicilioDto.setLocalidad(paciente.getDomicilio().getLocalidad());
+            domicilioDto.setProvincia(paciente.getDomicilio().getProvincia());
+            domicilioDto.setPais(paciente.getDomicilio().getPais());
             pacienteDto.setApellido(paciente.getApellido());
             pacienteDto.setNombre(paciente.getNombre());
-            pacienteDto.setDomicilio(paciente.getDomicilio());
+            pacienteDto.setDomicilio(domicilioDto);
         }
 
         return pacienteDto;
 
     }
 
-    public PacienteDto guardar(@RequestBody Paciente paciente) {
+    public PacienteDto guardar(Paciente paciente) {
 
-//        DomicilioDto domicilioPaciente = domicilioService.buscarPorId(paciente.getDomicilio().getId());
-//
-//        if (domicilioPaciente == null) {
-//
-//            domicilioService.guardar(paciente.getDomicilio());
-//        }
+        Domicilio domicilioPaciente = domicilioService.buscarPorDomicilio(paciente.getDomicilio().getCalle(),
+                                                                          paciente.getDomicilio().getNumero(),
+                                                                          paciente.getDomicilio().getLocalidad(),
+                                                                          paciente.getDomicilio().getProvincia());
+
+        if (domicilioPaciente == null) {
+
+            domicilioService.guardar(paciente.getDomicilio());
+        } else {
+            paciente.setDomicilio(domicilioPaciente);
+        }
 
         Paciente pacienteGuardado = pacienteRepository.save(paciente);
 
         PacienteDto pacienteDto = new PacienteDto();
+        DomicilioDto domicilioDto = new DomicilioDto();
+
+        domicilioDto.setCalle(paciente.getDomicilio().getCalle());
+        domicilioDto.setNumero(paciente.getDomicilio().getNumero());
+        domicilioDto.setLocalidad(paciente.getDomicilio().getLocalidad());
+        domicilioDto.setProvincia(paciente.getDomicilio().getProvincia());
+        domicilioDto.setPais(paciente.getDomicilio().getPais());
 
         pacienteDto.setNombre(pacienteGuardado.getNombre());
         pacienteDto.setApellido(pacienteGuardado.getApellido());
-        pacienteDto.setDomicilio(pacienteGuardado.getDomicilio());
+        pacienteDto.setDomicilio(domicilioDto);
 
         return pacienteDto;
 
     }
 
 
-    public PacienteDto actualizar(@RequestBody Paciente paciente, Long id) {
+    public PacienteDto actualizar(Paciente paciente, Long id) {
 
-        PacienteDto pacienteEncontrado = this.buscarPorId(id);
-        PacienteDto pacienteActualizado = null;
+        Paciente pacienteEncontrado = pacienteRepository.findById(id).orElse(null);
+        PacienteDto pacienteDto = null;
 
         if (pacienteEncontrado != null) {
-            pacienteActualizado = this.guardar(paciente);
+
+            paciente.setId(pacienteEncontrado.getId());
+
+            pacienteDto = this.guardar(paciente);
 
         }
 
-        return pacienteActualizado;
+        return pacienteDto;
 
     }
 
@@ -88,9 +112,16 @@ public class PacienteService {
         for (Paciente paciente : listaPacientes) {
 
             PacienteDto pacienteDto = new PacienteDto();
+            DomicilioDto domicilioDto = new DomicilioDto();
+
+            domicilioDto.setCalle(paciente.getDomicilio().getCalle());
+            domicilioDto.setNumero(paciente.getDomicilio().getNumero());
+            domicilioDto.setLocalidad(paciente.getDomicilio().getLocalidad());
+            domicilioDto.setProvincia(paciente.getDomicilio().getProvincia());
+            domicilioDto.setPais(paciente.getDomicilio().getPais());
             pacienteDto.setNombre(paciente.getNombre());
             pacienteDto.setApellido(paciente.getApellido());
-            pacienteDto.setDomicilio(paciente.getDomicilio());
+            pacienteDto.setDomicilio(domicilioDto);
 
             listaPacientesDto.add(pacienteDto);
 
@@ -103,6 +134,43 @@ public class PacienteService {
 
 
         pacienteRepository.deleteById(id);
+
+    }
+
+//    public PacienteDto buscarPorDni(int dni) {
+//
+//
+//        Paciente paciente = pacienteRepository.findByDni(dni).orElse(null);
+//
+//        PacienteDto pacienteDto = null;
+//        DomicilioDto domicilioDto = null;
+//
+//        if (paciente != null) {
+//
+//            LOGGER.info("Se crea DTO");
+//
+//            pacienteDto = new PacienteDto();
+//            domicilioDto = new DomicilioDto();
+//
+//
+//            domicilioDto.setCalle(paciente.getDomicilio().getCalle());
+//            domicilioDto.setNumero(paciente.getDomicilio().getNumero());
+//            domicilioDto.setLocalidad(paciente.getDomicilio().getLocalidad());
+//            domicilioDto.setProvincia(paciente.getDomicilio().getProvincia());
+//            domicilioDto.setPais(paciente.getDomicilio().getPais());
+//            pacienteDto.setApellido(paciente.getApellido());
+//            pacienteDto.setNombre(paciente.getNombre());
+//            pacienteDto.setDomicilio(domicilioDto);
+//        }
+//
+//        return pacienteDto;
+//
+//    }
+
+    public Paciente buscarPorDni(int dni) {
+
+
+        return pacienteRepository.findByDni(dni).orElse(null);
 
     }
 

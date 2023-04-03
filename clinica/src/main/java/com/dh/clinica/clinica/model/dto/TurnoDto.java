@@ -4,12 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class PacienteDto {
+public class TurnoDto {
 
-    private String nombre;
-    private String apellido;
-    private DomicilioDto domicilio;
+    public String odontologo;
+    public String paciente;
+    public Date fecha;
+
 }
