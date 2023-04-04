@@ -30,11 +30,7 @@ public class OdontologoService {
 
             LOGGER.info("Se crea DTO");
 
-            odontologoDto = new OdontologoDto();
-
-            odontologoDto.setApellido(odontologo.getApellido());
-            odontologoDto.setNombre(odontologo.getNombre());
-            odontologoDto.setMatricula(odontologo.getMatricula());
+            odontologoDto = this.armarOdontologoDto(odontologo);
         }
 
         return odontologoDto;
@@ -45,13 +41,7 @@ public class OdontologoService {
 
         Odontologo odontologoGuardado = odontologoRepository.save(odontologo);
 
-        OdontologoDto odontologoDto = new OdontologoDto();
-
-        odontologoDto.setApellido(odontologo.getApellido());
-        odontologoDto.setNombre(odontologo.getNombre());
-        odontologoDto.setMatricula(odontologo.getMatricula());
-
-        return odontologoDto;
+        return this.armarOdontologoDto(odontologoGuardado);
 
     }
 
@@ -79,11 +69,7 @@ public class OdontologoService {
 
         for (Odontologo odontologo : listaOdontologos) {
 
-            OdontologoDto odontologoDto = new OdontologoDto();
-
-            odontologoDto.setNombre(odontologo.getNombre());
-            odontologoDto.setApellido(odontologo.getApellido());
-            odontologoDto.setMatricula(odontologo.getMatricula());
+            OdontologoDto odontologoDto = this.armarOdontologoDto(odontologo);
 
             listaOdontologosDto.add(odontologoDto);
 
@@ -99,28 +85,19 @@ public class OdontologoService {
 
     }
 
-//    public OdontologoDto buscarPorMatricula(int matricula) {
-//
-//        Odontologo odontologo = odontologoRepository.findByMatricula(matricula).orElse(null);
-//
-//        OdontologoDto odontologoDto = null;
-//
-//        if (odontologo != null) {
-//
-//            LOGGER.info("Se crea DTO");
-//
-//            odontologoDto = new OdontologoDto();
-//
-//            odontologoDto.setApellido(odontologo.getApellido());
-//            odontologoDto.setNombre(odontologo.getNombre());
-//            odontologoDto.setMatricula(odontologo.getMatricula());
-//        }
-//
-//        return odontologoDto;
-//    }
-
     public Odontologo buscarPorMatricula(int matricula) {
 
         return odontologoRepository.findByMatricula(matricula).orElse(null);
+    }
+
+    public OdontologoDto armarOdontologoDto(Odontologo odontologo) {
+
+        OdontologoDto odontologoDto = new OdontologoDto();
+
+        odontologoDto.setNombre(odontologo.getNombre());
+        odontologoDto.setApellido(odontologo.getApellido());
+        odontologoDto.setMatricula(odontologo.getMatricula());
+
+        return odontologoDto;
     }
 }

@@ -4,6 +4,8 @@ package com.dh.clinica.clinica.controller;
 import com.dh.clinica.clinica.model.Turno;
 import com.dh.clinica.clinica.model.dto.TurnoDto;
 import com.dh.clinica.clinica.service.TurnoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/turnos")
 public class TurnoController {
+
+    private static final Logger LOGGER = LogManager.getLogger(TurnoController.class);
     @Autowired
     private TurnoService turnoService;
 
@@ -32,6 +36,8 @@ public class TurnoController {
 
 
         } catch (Exception e) {
+
+            LOGGER.error(e.getMessage());
 
             turnoDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 

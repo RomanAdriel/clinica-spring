@@ -4,6 +4,7 @@ package com.dh.clinica.clinica.service;
 import com.dh.clinica.clinica.model.Odontologo;
 import com.dh.clinica.clinica.model.Paciente;
 import com.dh.clinica.clinica.model.Turno;
+import com.dh.clinica.clinica.model.dto.PacienteDto;
 import com.dh.clinica.clinica.model.dto.TurnoDto;
 import com.dh.clinica.clinica.repository.TurnoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class TurnoService {
         if (pacienteTurno != null) {
 
             turno.setPaciente(pacienteTurno);
+        } else {
+
+            PacienteDto pacienteGuardado = pacienteService.guardar(turno.getPaciente());
         }
 
         if (odontologoTurno != null) {
@@ -41,14 +45,7 @@ public class TurnoService {
 
         Turno turnoGuardado = turnoRepository.save(turno);
 
-        TurnoDto turnoDto = new TurnoDto();
-
-        turnoDto.setOdontologo(
-                turnoGuardado.getOdontologo().getNombre() + " " + turnoGuardado.getOdontologo().getApellido());
-        turnoDto.setPaciente(turnoGuardado.getPaciente().getNombre() + " " + turnoGuardado.getPaciente().getApellido());
-        turnoDto.setFecha(turnoGuardado.getFecha());
-
-        return turnoDto;
+        return this.armarTurnoDto(turno);
 
     }
 
@@ -59,17 +56,26 @@ public class TurnoService {
 
         for (Turno turno : listaTurnos) {
 
-            TurnoDto turnoDto = new TurnoDto();
-
-            turnoDto.setOdontologo(turno.getOdontologo().getNombre() + " " + turno.getOdontologo().getApellido());
-            turnoDto.setPaciente(turno.getPaciente().getNombre() + " " + turno.getPaciente().getApellido());
-            turnoDto.setFecha(turno.getFecha());
+            TurnoDto turnoDto = this.armarTurnoDto(turno);
 
             listaTurnosDto.add(turnoDto);
 
         }
 
         return listaTurnosDto;
+    }
+
+    public TurnoDto armarTurnoDto(Turno turno) {
+
+        TurnoDto turnoDto = new TurnoDto();
+
+        turnoDto.setOdontologo(turno.getOdontologo().getNombre() + " " + turno.getOdontologo().getApellido());
+        turnoDto.setPaciente(turno.getPaciente().getNombre() + " " + turno.getPaciente().getApellido());
+        turnoDto.setFecha(turno.getFecha());
+        turnoDto.setHora(turno.getHora());
+
+        return turnoDto;
+
     }
 
 

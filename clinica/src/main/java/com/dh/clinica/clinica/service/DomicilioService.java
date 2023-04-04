@@ -27,13 +27,7 @@ public class DomicilioService {
 
             LOGGER.info("Se crea DTO");
 
-            domicilioDto = new DomicilioDto();
-
-            domicilioDto.setCalle(domicilio.getCalle());
-            domicilioDto.setNumero(domicilio.getNumero());
-            domicilioDto.setLocalidad(domicilio.getLocalidad());
-            domicilioDto.setProvincia(domicilio.getProvincia());
-            domicilioDto.setPais(domicilio.getPais());
+            domicilioDto = this.armarDomicilioDto(domicilio);
 
         }
 
@@ -45,6 +39,18 @@ public class DomicilioService {
 
         Domicilio domicilioGuardado = domicilioRepository.save(domicilio);
 
+        return this.armarDomicilioDto(domicilioGuardado);
+
+    }
+
+    public Domicilio buscarPorDomicilio(String calle, int numero, String localidad, String provincia) {
+
+        return domicilioRepository.findByCalleAndNumeroAndLocalidadAndProvincia(calle, numero, localidad, provincia);
+    }
+
+
+    public DomicilioDto armarDomicilioDto(Domicilio domicilio) {
+
         DomicilioDto domicilioDto = new DomicilioDto();
 
         domicilioDto.setCalle(domicilio.getCalle());
@@ -55,11 +61,7 @@ public class DomicilioService {
 
         return domicilioDto;
 
-    }
 
-    public Domicilio buscarPorDomicilio(String calle, int numero, String localidad, String provincia) {
-
-        return domicilioRepository.findByCalleAndNumeroAndLocalidadAndProvincia(calle, numero, localidad, provincia);
     }
 
 
