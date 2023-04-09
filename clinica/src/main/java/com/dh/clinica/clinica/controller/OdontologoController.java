@@ -1,6 +1,8 @@
 package com.dh.clinica.clinica.controller;
 
 
+import com.dh.clinica.clinica.exceptions.BadRequestException;
+import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.Odontologo;
 import com.dh.clinica.clinica.model.dto.OdontologoDto;
 import com.dh.clinica.clinica.service.OdontologoService;
@@ -21,93 +23,36 @@ public class OdontologoController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<OdontologoDto> buscarOdontologoPorId(@PathVariable Long id) {
+    public ResponseEntity<OdontologoDto> buscarOdontologoPorId(@PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
 
-        ResponseEntity<OdontologoDto> odontologoDto = null;
-
-        try {
-
-            odontologoDto = ResponseEntity.ok(odontologoService.buscarPorId(id));
-
-            if (!odontologoDto.hasBody()) {
-                odontologoDto = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-
-        } catch (Exception e) {
-
-            odontologoDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-
-        return odontologoDto;
+        return ResponseEntity.ok(odontologoService.buscarPorId(id));
 
     }
 
     @PostMapping
-    public ResponseEntity<Odontologo> guardarOdontologo(@RequestBody Odontologo odontologo) {
+    public ResponseEntity<Odontologo> guardarOdontologo(@RequestBody Odontologo odontologo) throws BadRequestException {
 
-        ResponseEntity<Odontologo> odontologoEntity = null;
-
-        try {
-
-
-            odontologoEntity = ResponseEntity.created(
-                    ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                                               .buildAndExpand(odontologoService.guardar(odontologo)).toUri()).build();
-
-
-        } catch (Exception e) {
-
-            odontologoEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-        return odontologoEntity;
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                                           .buildAndExpand(odontologoService.guardar(odontologo)).toUri()).build();
 
     }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<OdontologoDto> modificarOdontologo(@RequestBody Odontologo odontologo,
-                                                             @PathVariable Long id) {
+                                                             @PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
 
-        OdontologoDto odontologoActualizado = odontologoService.actualizar(odontologo, id);
-        ResponseEntity<OdontologoDto> odontologoDto = null;
-
-        try {
-
-            if (odontologoActualizado != null) {
-
-                odontologoDto = ResponseEntity.ok(odontologoActualizado);
-
-            } else {
-
-                odontologoDto = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-        } catch (Exception e) {
-
-            odontologoDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-        return odontologoDto;
+        return ResponseEntity.ok(
+                odontologoService.actualizar(odontologo, id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> borrarOdontologo(@PathVariable Long id) {
+    public ResponseEntity<Void> borrarOdontologo(@PathVariable Long id) throws ResourceNotFoundException, BadRequestException {
 
-        try {
-            odontologoService.borrarPorId(id);
+        odontologoService.borrarPorId(id);
 
-            return new ResponseEntity<>(HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

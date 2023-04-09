@@ -1,5 +1,7 @@
 package com.dh.clinica.clinica.service;
 
+import com.dh.clinica.clinica.exceptions.BadRequestException;
+import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.Domicilio;
 import com.dh.clinica.clinica.model.Paciente;
 import com.dh.clinica.clinica.model.dto.DomicilioDto;
@@ -29,14 +31,13 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findById(id).orElse(null);
 
         PacienteDto pacienteDto = null;
-        DomicilioDto domicilioDto = null;
 
         if (paciente != null) {
 
-            LOGGER.info("Se crea DTO");
-
-            domicilioDto = domicilioService.armarDomicilioDto(paciente.getDomicilio());
+            DomicilioDto domicilioDto = domicilioService.armarDomicilioDto(paciente.getDomicilio());
             pacienteDto = this.armarPacienteDto(paciente, domicilioDto);
+
+            LOGGER.info("Se encontró el paciente con ID = " + paciente.getId());
 
         }
 
@@ -60,6 +61,8 @@ public class PacienteService {
 
         Paciente pacienteGuardado = pacienteRepository.save(paciente);
 
+        LOGGER.info("Se guardó el paciente con ID = " + pacienteGuardado.getId());
+
         DomicilioDto domicilioDto = domicilioService.armarDomicilioDto(paciente.getDomicilio());
 
         return this.armarPacienteDto(pacienteGuardado, domicilioDto);
@@ -77,6 +80,8 @@ public class PacienteService {
             paciente.setId(pacienteEncontrado.getId());
 
             pacienteDto = this.guardar(paciente);
+
+            LOGGER.info("Se actualizó el paciente con ID = " + pacienteEncontrado.getId());
 
         }
 
@@ -98,13 +103,29 @@ public class PacienteService {
 
         }
 
+        LOGGER.info("Se obtuvieron todos los pacientes");
+
         return listaPacientesDto;
     }
 
-    public void borrarPorId(Long id) {
+    public void borrarPorId(Long id) throws ResourceNotFoundException, BadRequestException {
+
+        if(id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
 
 
-        pacienteRepository.deleteById(id);
+
+        Paciente paciente = pacienteRepository.findById(id).orElse(null);
+
+        if (paciente != null) {
+
+            pacienteRepository.deleteById(id);
+            LOGGER.info("Se borró el paciente con ID = " + paciente.getId());
+
+        } else {
+            throw new ResourceNotFoundException("El odontólogo con ID = " + id + " no existe");
+        }
 
     }
 

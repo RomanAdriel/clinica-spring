@@ -1,0 +1,6 @@
+.flex-cards {
+    display: flex;
+    margin: 50px;
+    flex-direction: row;
+    justify-content: center;
+}

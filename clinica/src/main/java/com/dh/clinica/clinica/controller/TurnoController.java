@@ -1,11 +1,11 @@
 package com.dh.clinica.clinica.controller;
 
 
+import com.dh.clinica.clinica.exceptions.BadRequestException;
+import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.Turno;
 import com.dh.clinica.clinica.model.dto.TurnoDto;
 import com.dh.clinica.clinica.service.TurnoService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,32 +18,23 @@ import java.util.List;
 @RequestMapping("/turnos")
 public class TurnoController {
 
-    private static final Logger LOGGER = LogManager.getLogger(TurnoController.class);
     @Autowired
     private TurnoService turnoService;
 
     @PostMapping
-    public ResponseEntity<TurnoDto> guardarTurno(@RequestBody Turno turno) {
+    public ResponseEntity<TurnoDto> guardarTurno(@RequestBody Turno turno) throws BadRequestException {
 
-        ResponseEntity<TurnoDto> turnoDto = null;
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                                           .buildAndExpand(turnoService.guardar(turno)).toUri()).build();
 
-        try {
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TurnoDto> actualizarTurno(@RequestBody Turno turno, @PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
 
-            turnoDto = ResponseEntity.created(
-                    ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                                               .buildAndExpand(turnoService.guardar(turno)).toUri()).build();
-
-
-        } catch (Exception e) {
-
-            LOGGER.error(e.getMessage());
-
-            turnoDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-        return turnoDto;
+        return ResponseEntity.ok(
+                turnoService.actualizarTurno(turno, id));
 
     }
 
@@ -60,6 +51,36 @@ public class TurnoController {
         }
 
         return listaTurnos;
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TurnoDto> buscarTurnoPorId(@PathVariable Long id) throws BadRequestException {
+
+        return ResponseEntity.ok(turnoService.buscarPorId(id));
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> borrarTurno(@PathVariable Long id) throws ResourceNotFoundException, BadRequestException {
+
+        turnoService.borrarTurno(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @GetMapping("/paciente/{dni}")
+    public ResponseEntity<List<TurnoDto>> buscarTurnosPorPaciente(@PathVariable int dni) throws BadRequestException {
+
+        return ResponseEntity.ok(turnoService.buscarTurnosPorPaciente(dni));
+
+    }
+
+    @GetMapping("/odontologo/{matricula}")
+    public ResponseEntity<List<TurnoDto>> buscarTurnosPorOdontologo(@PathVariable int matricula) throws BadRequestException {
+
+        return ResponseEntity.ok(turnoService.buscarTurnosPorOdontologo(matricula));
 
     }
 }

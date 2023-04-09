@@ -1,5 +1,7 @@
 package com.dh.clinica.clinica.service;
 
+import com.dh.clinica.clinica.exceptions.BadRequestException;
+import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.Odontologo;
 import com.dh.clinica.clinica.model.dto.OdontologoDto;
 import com.dh.clinica.clinica.repository.OdontologoRepository;
@@ -20,7 +22,11 @@ public class OdontologoService {
     private OdontologoRepository odontologoRepository;
 
 
-    public OdontologoDto buscarPorId(Long id) {
+    public OdontologoDto buscarPorId(Long id) throws BadRequestException, ResourceNotFoundException {
+
+        if(id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
 
         Odontologo odontologo = odontologoRepository.findById(id).orElse(null);
 
@@ -28,24 +34,38 @@ public class OdontologoService {
 
         if (odontologo != null) {
 
-            LOGGER.info("Se crea DTO");
-
             odontologoDto = this.armarOdontologoDto(odontologo);
+            LOGGER.info("Se encontró el odontólogo con ID = " + odontologo.getId());
+        } else {
+            throw new ResourceNotFoundException("No se encontró el odontólogo.");
         }
 
         return odontologoDto;
     }
 
 
-    public OdontologoDto guardar(Odontologo odontologo) {
+    public OdontologoDto guardar(Odontologo odontologo) throws BadRequestException {
+
+        if(odontologo == null) {
+            throw new BadRequestException("Falta información del odontólogo.");
+        }
 
         Odontologo odontologoGuardado = odontologoRepository.save(odontologo);
+        LOGGER.info("Se guardó el odontólogo con ID = " + odontologoGuardado.getId());
 
         return this.armarOdontologoDto(odontologoGuardado);
 
     }
 
-    public OdontologoDto actualizar(Odontologo odontologo, Long id) {
+    public OdontologoDto actualizar(Odontologo odontologo, Long id) throws BadRequestException, ResourceNotFoundException {
+
+        if(id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
+
+        if(odontologo == null) {
+            throw new BadRequestException("Falta información del odontólogo.");
+        }
 
         Odontologo odontologoEncontrado = odontologoRepository.findById(id).orElse(null);
         OdontologoDto odontologoDto = null;
@@ -56,6 +76,10 @@ public class OdontologoService {
 
             odontologoDto = this.guardar(odontologo);
 
+            LOGGER.info("Se actualizó el odontólogo con ID = " + odontologoEncontrado.getId());
+
+        } else {
+            throw new ResourceNotFoundException("No se encontró el odontólogo.");
         }
 
         return odontologoDto;
@@ -75,13 +99,28 @@ public class OdontologoService {
 
         }
 
+        LOGGER.info("Se obtuvieron todos los odontólogos");
+
         return listaOdontologosDto;
     }
 
-    public void borrarPorId(Long id) {
+    public void borrarPorId(Long id) throws ResourceNotFoundException, BadRequestException {
 
+        if(id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
 
-        odontologoRepository.deleteById(id);
+        Odontologo odontologo = odontologoRepository.findById(id).orElse(null);
+
+        if (odontologo != null) {
+
+            odontologoRepository.deleteById(id);
+            LOGGER.info("Se borró el odontólogo con ID = " + odontologo.getId());
+
+        } else {
+            throw new ResourceNotFoundException("El odontólogo con ID = " + id + " no existe");
+        }
+
 
     }
 

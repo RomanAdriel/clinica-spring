@@ -12,4 +12,5 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
     @Query(value = "select * from Pacientes p WHERE p.dni = ?1", nativeQuery = true)
     Optional<Paciente> findByDni(int dni);
+
 }

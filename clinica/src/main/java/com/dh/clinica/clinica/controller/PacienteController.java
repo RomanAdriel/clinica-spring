@@ -1,5 +1,7 @@
 package com.dh.clinica.clinica.controller;
 
+import com.dh.clinica.clinica.exceptions.BadRequestException;
+import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.Paciente;
 import com.dh.clinica.clinica.model.dto.PacienteDto;
 import com.dh.clinica.clinica.service.PacienteService;
@@ -92,18 +94,11 @@ public class PacienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> borrarPaciente(@PathVariable Long id) {
+    public ResponseEntity<Void> borrarPaciente(@PathVariable Long id) throws ResourceNotFoundException, BadRequestException {
 
-        try {
             pacienteService.borrarPorId(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
     }
 
     @GetMapping
