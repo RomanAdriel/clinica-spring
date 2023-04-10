@@ -47,16 +47,13 @@ public class PacienteController {
             pacienteService.borrarPorId(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @GetMapping
     public ResponseEntity<List<PacienteDto>> buscarPacientes() {
 
-        ResponseEntity<List<PacienteDto>> listaPacientes = null;
-
-        listaPacientes = ResponseEntity.ok(pacienteService.buscarTodos());
-
-        return listaPacientes;
+        return ResponseEntity.ok(pacienteService.buscarTodos());
 
     }
 

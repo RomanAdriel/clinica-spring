@@ -59,12 +59,7 @@ public class OdontologoController {
     @GetMapping
     public ResponseEntity<List<OdontologoDto>> buscarOdontologos() {
 
-        ResponseEntity<List<OdontologoDto>> listaOdontologos = null;
-
-        listaOdontologos = ResponseEntity.ok(odontologoService.buscarTodos());
-
-
-        return listaOdontologos;
+        return ResponseEntity.ok(odontologoService.buscarTodos());
 
     }
 }
