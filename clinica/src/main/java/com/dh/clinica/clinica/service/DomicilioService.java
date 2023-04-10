@@ -20,9 +20,7 @@ public class DomicilioService {
 
     public DomicilioDto buscarPorId(Long id) throws BadRequestException {
 
-        if(id == null || id < 1) {
-            throw new BadRequestException("El ID debe ser mayor a 0");
-        }
+        this.validarId(id);
 
         Domicilio domicilio = domicilioRepository.findById(id).orElse(null);
 
@@ -40,17 +38,20 @@ public class DomicilioService {
 
     }
 
-    public DomicilioDto guardar(@RequestBody Domicilio domicilio) {
+    public void guardar(@RequestBody Domicilio domicilio) throws BadRequestException {
+
+        this.validarDomicilio(domicilio.getCalle(), domicilio.getNumero(), domicilio.getLocalidad(),
+                         domicilio.getProvincia());
 
         Domicilio domicilioGuardado = domicilioRepository.save(domicilio);
 
         LOGGER.info("Se guardó el domicilio con ID = " + domicilioGuardado.getId());
 
-        return this.armarDomicilioDto(domicilioGuardado);
-
     }
 
-    public Domicilio buscarPorDomicilio(String calle, int numero, String localidad, String provincia) {
+    public Domicilio buscarPorDomicilio(String calle, int numero, String localidad, String provincia) throws BadRequestException {
+
+        this.validarDomicilio(calle, numero, localidad, provincia);
 
         return domicilioRepository.findByCalleAndNumeroAndLocalidadAndProvincia(calle, numero, localidad, provincia);
     }
@@ -69,6 +70,21 @@ public class DomicilioService {
         return domicilioDto;
 
 
+    }
+
+    private void validarDomicilio(String calle, int numero, String localidad, String provincia) throws BadRequestException {
+
+        if (calle == null || numero < 1 || localidad == null || provincia == null) {
+            throw new BadRequestException("Falta información del domicilio");
+        }
+
+
+    }
+
+    private void validarId(Long id) throws BadRequestException {
+        if (id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
     }
 
 

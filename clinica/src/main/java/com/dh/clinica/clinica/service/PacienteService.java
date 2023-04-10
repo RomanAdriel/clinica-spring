@@ -45,7 +45,9 @@ public class PacienteService {
 
     }
 
-    public PacienteDto guardar(Paciente paciente) {
+    public PacienteDto guardar(Paciente paciente) throws BadRequestException {
+
+        this.validarPaciente(paciente);
 
         Domicilio domicilioPaciente = domicilioService.buscarPorDomicilio(paciente.getDomicilio().getCalle(),
                                                                           paciente.getDomicilio().getNumero(),
@@ -70,7 +72,10 @@ public class PacienteService {
     }
 
 
-    public PacienteDto actualizar(Paciente paciente, Long id) {
+    public PacienteDto actualizar(Paciente paciente, Long id) throws BadRequestException {
+
+        this.validarPaciente(paciente);
+
 
         Paciente pacienteEncontrado = pacienteRepository.findById(id).orElse(null);
         PacienteDto pacienteDto = null;
@@ -110,11 +115,7 @@ public class PacienteService {
 
     public void borrarPorId(Long id) throws ResourceNotFoundException, BadRequestException {
 
-        if(id == null || id < 1) {
-            throw new BadRequestException("El ID debe ser mayor a 0");
-        }
-
-
+        this.validarId(id);
 
         Paciente paciente = pacienteRepository.findById(id).orElse(null);
 
@@ -130,11 +131,18 @@ public class PacienteService {
     }
 
 
-    public Paciente buscarPorDni(int dni) {
+    public Paciente buscarPorDni(int dni) throws BadRequestException, ResourceNotFoundException {
 
+        this.validarDni(dni);
 
-        return pacienteRepository.findByDni(dni).orElse(null);
+        Paciente paciente = pacienteRepository.findByDni(dni).orElse(null);
 
+        if (paciente != null) {
+            return paciente;
+        } else {
+            throw new ResourceNotFoundException("El paciente con DNI = " + dni + " no existe.");
+        }
+        
     }
 
     public PacienteDto armarPacienteDto(Paciente paciente, DomicilioDto domicilioDto) {
@@ -147,6 +155,28 @@ public class PacienteService {
 
         return pacienteDto;
 
+    }
+
+    // VALIDACIONES
+
+    private void validarId(Long id) throws BadRequestException {
+        if (id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
+    }
+
+    private void validarPaciente(Paciente paciente) throws BadRequestException {
+
+        if (paciente == null || paciente.getDomicilio() == null || paciente.getFechaAlta() == null || paciente.getNombre() == null || paciente.getApellido() == null || paciente.getDni() < 1) {
+            throw new BadRequestException("Falta información del paciente");
+        }
+    }
+
+    private void validarDni(int dni) throws BadRequestException {
+
+        if (dni < 1) {
+            throw new BadRequestException("El DNI del paciente debe ser mayor a 0");
+        }
     }
 
 

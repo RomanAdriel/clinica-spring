@@ -68,7 +68,7 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PacienteDto> modificarPaciente(@RequestBody Paciente paciente, @PathVariable Long id) {
+    public ResponseEntity<PacienteDto> modificarPaciente(@RequestBody Paciente paciente, @PathVariable Long id) throws BadRequestException {
 
         PacienteDto pacienteActualizado = pacienteService.actualizar(paciente, id);
         ResponseEntity<PacienteDto> pacienteDto = null;

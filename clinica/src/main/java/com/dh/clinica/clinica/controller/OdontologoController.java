@@ -30,7 +30,7 @@ public class OdontologoController {
     }
 
     @PostMapping
-    public ResponseEntity<Odontologo> guardarOdontologo(@RequestBody Odontologo odontologo) throws BadRequestException {
+    public ResponseEntity<OdontologoDto> guardarOdontologo(@RequestBody Odontologo odontologo) throws BadRequestException {
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -61,12 +61,8 @@ public class OdontologoController {
 
         ResponseEntity<List<OdontologoDto>> listaOdontologos = null;
 
-        try {
-            listaOdontologos = ResponseEntity.ok(odontologoService.buscarTodos());
-        } catch (Exception e) {
+        listaOdontologos = ResponseEntity.ok(odontologoService.buscarTodos());
 
-            listaOdontologos = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
 
         return listaOdontologos;
 

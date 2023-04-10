@@ -24,9 +24,7 @@ public class OdontologoService {
 
     public OdontologoDto buscarPorId(Long id) throws BadRequestException, ResourceNotFoundException {
 
-        if(id == null || id < 1) {
-            throw new BadRequestException("El ID debe ser mayor a 0");
-        }
+        this.validarId(id);
 
         Odontologo odontologo = odontologoRepository.findById(id).orElse(null);
 
@@ -46,9 +44,7 @@ public class OdontologoService {
 
     public OdontologoDto guardar(Odontologo odontologo) throws BadRequestException {
 
-        if(odontologo == null) {
-            throw new BadRequestException("Falta información del odontólogo.");
-        }
+        this.validarOdontologo(odontologo);
 
         Odontologo odontologoGuardado = odontologoRepository.save(odontologo);
         LOGGER.info("Se guardó el odontólogo con ID = " + odontologoGuardado.getId());
@@ -59,13 +55,9 @@ public class OdontologoService {
 
     public OdontologoDto actualizar(Odontologo odontologo, Long id) throws BadRequestException, ResourceNotFoundException {
 
-        if(id == null || id < 1) {
-            throw new BadRequestException("El ID debe ser mayor a 0");
-        }
+        this.validarId(id);
 
-        if(odontologo == null) {
-            throw new BadRequestException("Falta información del odontólogo.");
-        }
+        this.validarOdontologo(odontologo);
 
         Odontologo odontologoEncontrado = odontologoRepository.findById(id).orElse(null);
         OdontologoDto odontologoDto = null;
@@ -106,9 +98,7 @@ public class OdontologoService {
 
     public void borrarPorId(Long id) throws ResourceNotFoundException, BadRequestException {
 
-        if(id == null || id < 1) {
-            throw new BadRequestException("El ID debe ser mayor a 0");
-        }
+        this.validarId(id);
 
         Odontologo odontologo = odontologoRepository.findById(id).orElse(null);
 
@@ -124,9 +114,17 @@ public class OdontologoService {
 
     }
 
-    public Odontologo buscarPorMatricula(int matricula) {
+    public Odontologo buscarPorMatricula(int matricula) throws BadRequestException, ResourceNotFoundException {
 
-        return odontologoRepository.findByMatricula(matricula).orElse(null);
+        this.validarMatricula(matricula);
+
+        Odontologo odontologo = odontologoRepository.findByMatricula(matricula).orElse(null);
+
+        if(odontologo != null) {
+            return odontologo;
+        } else {
+            throw new ResourceNotFoundException("El odontólogo con matrícula " + matricula + " no existe.");
+        }
     }
 
     public OdontologoDto armarOdontologoDto(Odontologo odontologo) {
@@ -138,5 +136,30 @@ public class OdontologoService {
         odontologoDto.setMatricula(odontologo.getMatricula());
 
         return odontologoDto;
+    }
+
+    // VALIDACIONES
+
+    private void validarId(Long id) throws BadRequestException {
+
+        if (id == null || id < 1) {
+            throw new BadRequestException("El ID debe ser mayor a 0");
+        }
+    }
+
+    private void validarOdontologo(Odontologo odontologo) throws BadRequestException {
+
+        if (odontologo == null || odontologo.getNombre() == null || odontologo.getApellido() == null || odontologo.getMatricula() < 1) {
+            throw new BadRequestException("Falta información del odontólogo.");
+        }
+
+    }
+
+    private void validarMatricula(int matricula) throws BadRequestException {
+
+        if (matricula < 1) {
+
+            throw new BadRequestException("La matrícula debe ser mayor a 0.");
+        }
     }
 }

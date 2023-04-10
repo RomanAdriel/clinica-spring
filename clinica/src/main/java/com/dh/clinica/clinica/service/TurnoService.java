@@ -6,7 +6,6 @@ import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.Odontologo;
 import com.dh.clinica.clinica.model.Paciente;
 import com.dh.clinica.clinica.model.Turno;
-import com.dh.clinica.clinica.model.dto.PacienteDto;
 import com.dh.clinica.clinica.model.dto.TurnoDto;
 import com.dh.clinica.clinica.repository.TurnoRepository;
 import org.apache.logging.log4j.LogManager;
@@ -49,11 +48,9 @@ public class TurnoService {
         return turnoDto;
     }
 
-    public TurnoDto guardar(Turno turno) throws BadRequestException {
+    public TurnoDto guardar(Turno turno) throws BadRequestException, ResourceNotFoundException {
 
-        if (turno == null) {
-            throw new BadRequestException("El formato del turno enviado es incorrecto");
-        }
+        this.validarTurno(turno);
 
         Paciente pacienteTurno = pacienteService.buscarPorDni(turno.getPaciente().getDni());
         Odontologo odontologoTurno = odontologoService.buscarPorMatricula(turno.getOdontologo().getMatricula());
@@ -63,7 +60,7 @@ public class TurnoService {
             turno.setPaciente(pacienteTurno);
         } else {
 
-            PacienteDto pacienteGuardado = pacienteService.guardar(turno.getPaciente());
+            pacienteService.guardar(turno.getPaciente());
         }
 
         if (odontologoTurno != null) {
@@ -100,6 +97,9 @@ public class TurnoService {
 
     public TurnoDto actualizarTurno(Turno turno, Long id) throws BadRequestException, ResourceNotFoundException {
 
+        this.validarId(id);
+        this.validarTurno(turno);
+
         Turno turnoEncontrado = turnoRepository.findById(id).orElse(null);
         TurnoDto turnoDto = null;
 
@@ -121,9 +121,7 @@ public class TurnoService {
 
     public void borrarTurno(Long id) throws ResourceNotFoundException, BadRequestException {
 
-        if (id == null || id < 1) {
-            throw new BadRequestException("El ID debe ser mayor a 0");
-        }
+        this.validarId(id);
 
         Turno turno = turnoRepository.findById(id).orElse(null);
 
@@ -140,9 +138,7 @@ public class TurnoService {
 
     public List<TurnoDto> buscarTurnosPorPaciente(int dni) throws BadRequestException {
 
-        if (dni < 1) {
-            throw new BadRequestException("El DNI del paciente debe ser mayor a 0.");
-        }
+        this.validarAtributo(dni, "DNI");
 
         List<Turno> listaTurnos = turnoRepository.findTurnosByPaciente(dni);
         List<TurnoDto> listaTurnosDto = new ArrayList<>();
@@ -162,9 +158,7 @@ public class TurnoService {
 
     public List<TurnoDto> buscarTurnosPorOdontologo(int matricula) throws BadRequestException {
 
-        if (matricula < 1) {
-            throw new BadRequestException("La matrícula debe ser mayor a 0.");
-        }
+        this.validarAtributo(matricula, "Matrícula");
 
         List<Turno> listaTurnos = turnoRepository.findTurnosByOdontologo(matricula);
         List<TurnoDto> listaTurnosDto = new ArrayList<>();
@@ -195,5 +189,35 @@ public class TurnoService {
 
     }
 
+    // VALIDACIONES
+
+    private void validarId(Long id) throws BadRequestException {
+
+        if (id == null || id < 1) {
+            throw new BadRequestException("El ID del turno debe ser mayor a 0.");
+        }
+    }
+
+
+    /**
+     *
+     * @param atributo Matrícula o DNI
+     * @param tipo Matrícula o DNI
+     * @throws BadRequestException Throw exception if attribute < 1
+     */
+    private void validarAtributo(int atributo, String tipo) throws BadRequestException {
+
+        if (atributo < 1) {
+
+            throw new BadRequestException(tipo + " debe ser mayor a 0.");
+        }
+    }
+
+    private void validarTurno(Turno turno) throws BadRequestException {
+
+        if (turno == null || turno.getPaciente() == null || turno.getOdontologo() == null || turno.getFecha() == null || turno.getHora() == null) {
+            throw new BadRequestException("Falta información del turno");
+        }
+    }
 
 }

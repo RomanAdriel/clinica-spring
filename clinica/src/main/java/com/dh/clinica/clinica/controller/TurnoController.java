@@ -22,7 +22,7 @@ public class TurnoController {
     private TurnoService turnoService;
 
     @PostMapping
-    public ResponseEntity<TurnoDto> guardarTurno(@RequestBody Turno turno) throws BadRequestException {
+    public ResponseEntity<TurnoDto> guardarTurno(@RequestBody Turno turno) throws BadRequestException, ResourceNotFoundException {
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")

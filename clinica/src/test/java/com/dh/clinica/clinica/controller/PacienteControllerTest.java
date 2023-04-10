@@ -74,19 +74,4 @@ class PacienteControllerTest {
         Assertions.assertEquals(entidadEsperada, pacienteController.buscarPacientePorId(1L));
     }
 
-    @Test
-    void guardarPaciente() {
-    }
-
-    @Test
-    void modificarPaciente() {
-    }
-
-    @Test
-    void borrarPaciente() {
-    }
-
-    @Test
-    void buscarPacientes() {
-    }
 }
