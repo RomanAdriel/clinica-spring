@@ -409,7 +409,7 @@ class OdontologoServiceTest {
     }
 
     @Test
-    void buscar_odontologo_por_matricula_no_existente() {
+    void buscar_odontologo_por_matricula_no_existente() throws BadRequestException {
 
         //ARRANGE
 
@@ -421,10 +421,7 @@ class OdontologoServiceTest {
 
         //ASSERT
 
-        Assertions.assertThrows(ResourceNotFoundException.class,
-                                () -> {
-                                    odontologoService.buscarPorMatricula(odontologo.getMatricula());
-                                });
+        Assertions.assertNull(odontologoService.buscarPorMatricula(odontologo.getMatricula()));
 
 
     }

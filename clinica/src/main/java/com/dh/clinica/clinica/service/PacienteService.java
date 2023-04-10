@@ -87,6 +87,7 @@ public class PacienteService {
         if (pacienteEncontrado != null) {
 
             paciente.setId(pacienteEncontrado.getId());
+            paciente.setFechaAlta(pacienteEncontrado.getFechaAlta());
 
             pacienteDto = this.guardar(paciente);
 
@@ -139,14 +140,8 @@ public class PacienteService {
 
         this.validarDni(dni);
 
-        Paciente paciente = pacienteRepository.findByDni(dni).orElse(null);
+        return pacienteRepository.findByDni(dni).orElse(null);
 
-        if (paciente != null) {
-            return paciente;
-        } else {
-            throw new ResourceNotFoundException("El paciente con DNI = " + dni + " no existe.");
-        }
-        
     }
 
     public PacienteDto armarPacienteDto(Paciente paciente, DomicilioDto domicilioDto) {
@@ -171,7 +166,7 @@ public class PacienteService {
 
     private void validarPaciente(Paciente paciente) throws BadRequestException {
 
-        if (paciente == null || paciente.getDomicilio() == null || paciente.getFechaAlta() == null || paciente.getNombre() == null || paciente.getApellido() == null || paciente.getDni() < 1) {
+        if (paciente == null || paciente.getDomicilio() == null || paciente.getNombre() == null || paciente.getApellido() == null || paciente.getDni() < 1) {
             throw new BadRequestException("Falta información del paciente");
         }
     }

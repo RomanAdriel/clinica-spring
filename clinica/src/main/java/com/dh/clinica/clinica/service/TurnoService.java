@@ -29,7 +29,7 @@ public class TurnoService {
     private PacienteService pacienteService;
 
 
-    public TurnoDto buscarPorId(Long id) throws BadRequestException {
+    public TurnoDto buscarPorId(Long id) throws BadRequestException, ResourceNotFoundException {
 
         if (id == null || id < 1) {
             throw new BadRequestException("El ID del turno debe ser mayor a 0.");
@@ -43,6 +43,8 @@ public class TurnoService {
             turnoDto = armarTurnoDto(turno);
             LOGGER.info("Se encontró el turno con ID = " + turno.getId());
 
+        } else {
+            throw new ResourceNotFoundException("No se encontró el turno con ID = " + id);
         }
 
         return turnoDto;

@@ -114,17 +114,11 @@ public class OdontologoService {
 
     }
 
-    public Odontologo buscarPorMatricula(int matricula) throws BadRequestException, ResourceNotFoundException {
+    public Odontologo buscarPorMatricula(int matricula) throws BadRequestException {
 
         this.validarMatricula(matricula);
 
-        Odontologo odontologo = odontologoRepository.findByMatricula(matricula).orElse(null);
-
-        if(odontologo != null) {
-            return odontologo;
-        } else {
-            throw new ResourceNotFoundException("El odontólogo con matrícula " + matricula + " no existe.");
-        }
+        return odontologoRepository.findByMatricula(matricula).orElse(null);
     }
 
     public OdontologoDto armarOdontologoDto(Odontologo odontologo) {

@@ -8,50 +8,29 @@
     <title>Clinica</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Clinica</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="./index.html">Inicio</a>
+              <a class="nav-link" href="./views/abmOdontologos.html">Odontologos</a>
+              <a class="nav-link" href="./views/abmPacientes.html">Pacientes</a>
+              <a class="nav-link" href="./views/abmTurnos.html">Turnos</a>
+            </div>
+          </div>
+        </div>
+      </nav>
 <div class="flex-cards">
     <div class="card" style="width: 18rem;">
         <img class="card-img-top" src="assets/patient.png" alt="Pacientes">
         <div class="card-body">
             <h5 class="card-title">Pacientes</h5>
             <p class="card-text">Administrar Pacientes (Buscar, Agregar, Actualizar y Borrar)</p>
-            <a href="#" class="btn btn-primary">Ir a Pacientes</a>
+            <a href="views/abmPacientes.html" class="btn btn-primary">Ir a Pacientes</a>
         </div>
     </div>
     <div class="card" style="width: 18rem;">
@@ -59,15 +38,15 @@
         <div class="card-body">
             <h5 class="card-title">Odontologos</h5>
             <p class="card-text">Administrar Odontologos (Buscar, Agregar, Actualizar y Borrar)</p>
-            <a href="#" class="btn btn-primary">Ir a Odontologos</a>
+            <a href="views/abmOdontologos.html" class="btn btn-primary">Ir a Odontologos</a>
         </div>
     </div>
     <div class="card" style="width: 18rem;">
         <img class="card-img-top" src="assets/schedule.png" alt="Turnos">
         <div class="card-body">
             <h5 class="card-title">Turnos</h5>
-            <p class="card-text">Administrar Turnos (Buscar, Agregar, Actualizar y Borrar)</p>
-            <a href="#" class="btn btn-primary">Ir a Turnos</a>
+            <p class="card-text">Administrar Turnos (Buscar y Agregar)</p>
+            <a href="views/abmTurnos.html" class="btn btn-primary">Ir a Turnos</a>
         </div>
     </div>
 </div>

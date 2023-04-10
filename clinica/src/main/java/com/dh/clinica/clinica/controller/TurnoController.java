@@ -55,7 +55,7 @@ public class TurnoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TurnoDto> buscarTurnoPorId(@PathVariable Long id) throws BadRequestException {
+    public ResponseEntity<TurnoDto> buscarTurnoPorId(@PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
 
         return ResponseEntity.ok(turnoService.buscarPorId(id));
 

@@ -15,11 +15,13 @@ window.addEventListener('load', () => {
   </div>`
 
   let requestToast = document.querySelector('#requestToast');
-  let agregarOdontologoForm = document.querySelector('#agregarOdontologo');
+  let actualizarOdontologoForm = document.querySelector('#actualizarOdontologo');
 
-  agregarOdontologoForm.addEventListener('submit', (event) => {
+  actualizarOdontologoForm.addEventListener('submit', (event) => {
 
     event.preventDefault();
+
+    let idOdontologo = document.querySelector("#idOdontologo").value;
 
     let reqBody = {
       nombre: document.querySelector("#nombre").value,
@@ -27,9 +29,9 @@ window.addEventListener('load', () => {
       matricula: document.querySelector("#matricula").value,
     }
 
-    let reqUrl = '/odontologos';
+    let reqUrl = '/odontologos/' + idOdontologo;
     let reqSettings = {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -37,10 +39,10 @@ window.addEventListener('load', () => {
     }
 
     fetch(reqUrl, reqSettings).then((response) => {
-      requestToast.innerHTML = crearToast('El odontologo se creo exitosamente!');
+      requestToast.innerHTML = crearToast('El odontologo se actualizo exitosamente!');
 
       }).catch(() => {
-      requestToast.innerHTML = crearToast('Hubo un problema al crear el odontologo');
+      requestToast.innerHTML = crearToast('Hubo un problema al actualizar el odontologo');
     })
   })
 })
