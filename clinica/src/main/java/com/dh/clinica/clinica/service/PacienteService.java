@@ -26,7 +26,9 @@ public class PacienteService {
     @Autowired
     private DomicilioService domicilioService;
 
-    public PacienteDto buscarPorId(Long id) {
+    public PacienteDto buscarPorId(Long id) throws BadRequestException, ResourceNotFoundException {
+
+        this.validarId(id);
 
         Paciente paciente = pacienteRepository.findById(id).orElse(null);
 
@@ -39,6 +41,8 @@ public class PacienteService {
 
             LOGGER.info("Se encontró el paciente con ID = " + paciente.getId());
 
+        } else {
+            throw new ResourceNotFoundException("No se encontró el paciente.");
         }
 
         return pacienteDto;

@@ -1,5 +1,7 @@
 package com.dh.clinica.clinica.controller;
 
+import com.dh.clinica.clinica.exceptions.BadRequestException;
+import com.dh.clinica.clinica.exceptions.ResourceNotFoundException;
 import com.dh.clinica.clinica.model.dto.DomicilioDto;
 import com.dh.clinica.clinica.model.dto.PacienteDto;
 import com.dh.clinica.clinica.service.DomicilioService;
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,25 +28,30 @@ class PacienteControllerTest {
     DomicilioService domicilioService;
 
     @Test
-    void buscar_paciente_por_id_no_existente() {
+    void buscar_paciente_por_id_no_existente() throws BadRequestException, ResourceNotFoundException {
 
         //ARRANGE
 
-        ResponseEntity<PacienteDto> entidadEsperada =  ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        PacienteDto pacienteDto = null;
+        PacienteDto pacienteDto = new PacienteDto();
+
+        pacienteDto.setNombre("Juan");
+        pacienteDto.setApellido("Perez");
 
         //ACT
 
-        when(pacienteService.buscarPorId(any())).thenReturn(pacienteDto);
+        when(pacienteService.buscarPorId(any())).thenThrow(ResourceNotFoundException.class);
 
         //ASSERT
 
-        Assertions.assertEquals(entidadEsperada, pacienteController.buscarPacientePorId(1L));
+        Assertions.assertThrows(ResourceNotFoundException.class,
+                                () -> {
+                                    pacienteController.buscarPacientePorId(1L);
+                                });
     }
 
 
     @Test
-    void buscar_paciente_por_id_existente() {
+    void buscar_paciente_por_id_existente() throws BadRequestException, ResourceNotFoundException {
 
         //ARRANGE
 

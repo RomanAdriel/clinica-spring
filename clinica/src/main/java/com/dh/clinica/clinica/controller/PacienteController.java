@@ -20,77 +20,25 @@ public class PacienteController {
     private PacienteService pacienteService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PacienteDto> buscarPacientePorId(@PathVariable Long id) {
+    public ResponseEntity<PacienteDto> buscarPacientePorId(@PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
 
-        ResponseEntity<PacienteDto> pacienteDto = null;
-
-        try {
-
-            pacienteDto = ResponseEntity.ok(pacienteService.buscarPorId(id));
-
-            if (!pacienteDto.hasBody()) {
-                pacienteDto = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-
-        } catch (Exception e) {
-
-            pacienteDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-
-        return pacienteDto;
+        return ResponseEntity.ok(pacienteService.buscarPorId(id));
 
     }
 
     @PostMapping
-    public ResponseEntity<PacienteDto> guardarPaciente(@RequestBody Paciente paciente) {
+    public ResponseEntity<PacienteDto> guardarPaciente(@RequestBody Paciente paciente) throws BadRequestException {
 
-        ResponseEntity<PacienteDto> pacienteDto = null;
-
-        try {
-
-
-            pacienteDto = ResponseEntity.created(
-                    ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                                               .buildAndExpand(pacienteService.guardar(paciente)).toUri()).build();
-
-
-        } catch (Exception e) {
-
-            pacienteDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-        return pacienteDto;
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                                           .buildAndExpand(pacienteService.guardar(paciente)).toUri()).build();
 
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PacienteDto> modificarPaciente(@RequestBody Paciente paciente, @PathVariable Long id) throws BadRequestException {
 
-        PacienteDto pacienteActualizado = pacienteService.actualizar(paciente, id);
-        ResponseEntity<PacienteDto> pacienteDto = null;
-
-        try {
-
-            if (pacienteActualizado != null) {
-
-                pacienteDto = ResponseEntity.ok(pacienteActualizado);
-
-            } else {
-
-                pacienteDto = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-        } catch (Exception e) {
-
-            pacienteDto = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-
-        return pacienteDto;
+        return ResponseEntity.ok(pacienteService.actualizar(paciente, id));
     }
 
     @DeleteMapping("/{id}")
@@ -106,12 +54,7 @@ public class PacienteController {
 
         ResponseEntity<List<PacienteDto>> listaPacientes = null;
 
-        try {
-            listaPacientes = ResponseEntity.ok(pacienteService.buscarTodos());
-        } catch (Exception e) {
-
-            listaPacientes = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        listaPacientes = ResponseEntity.ok(pacienteService.buscarTodos());
 
         return listaPacientes;
 
