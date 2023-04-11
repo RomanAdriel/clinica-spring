@@ -138,11 +138,15 @@ public class TurnoService {
 
     }
 
-    public List<TurnoDto> buscarTurnosPorPaciente(int dni) throws BadRequestException {
+    public List<TurnoDto> buscarTurnosPorPaciente(int dni) throws BadRequestException, ResourceNotFoundException {
 
         this.validarAtributo(dni, "DNI");
 
         List<Turno> listaTurnos = turnoRepository.findTurnosByPaciente(dni);
+
+        if (listaTurnos.size() == 0) {
+            throw new ResourceNotFoundException("El paciente no tiene turnos");
+        }
         List<TurnoDto> listaTurnosDto = new ArrayList<>();
 
         for (Turno turno : listaTurnos) {
@@ -158,11 +162,16 @@ public class TurnoService {
         return listaTurnosDto;
     }
 
-    public List<TurnoDto> buscarTurnosPorOdontologo(int matricula) throws BadRequestException {
+    public List<TurnoDto> buscarTurnosPorOdontologo(int matricula) throws BadRequestException, ResourceNotFoundException {
 
         this.validarAtributo(matricula, "Matrícula");
 
         List<Turno> listaTurnos = turnoRepository.findTurnosByOdontologo(matricula);
+
+        if(listaTurnos.size() == 0) {
+            throw new ResourceNotFoundException("El odontólogo no tiene turnos");
+        }
+
         List<TurnoDto> listaTurnosDto = new ArrayList<>();
 
         for (Turno turno : listaTurnos) {

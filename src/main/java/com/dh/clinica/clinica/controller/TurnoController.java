@@ -71,14 +71,14 @@ public class TurnoController {
     }
 
     @GetMapping("/paciente/{dni}")
-    public ResponseEntity<List<TurnoDto>> buscarTurnosPorPaciente(@PathVariable int dni) throws BadRequestException {
+    public ResponseEntity<List<TurnoDto>> buscarTurnosPorPaciente(@PathVariable int dni) throws BadRequestException, ResourceNotFoundException {
 
         return ResponseEntity.ok(turnoService.buscarTurnosPorPaciente(dni));
 
     }
 
     @GetMapping("/odontologo/{matricula}")
-    public ResponseEntity<List<TurnoDto>> buscarTurnosPorOdontologo(@PathVariable int matricula) throws BadRequestException {
+    public ResponseEntity<List<TurnoDto>> buscarTurnosPorOdontologo(@PathVariable int matricula) throws BadRequestException, ResourceNotFoundException {
 
         return ResponseEntity.ok(turnoService.buscarTurnosPorOdontologo(matricula));
 

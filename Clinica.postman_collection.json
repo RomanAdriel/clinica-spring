@@ -271,7 +271,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"odontologo\": {\r\n        \"nombre\": \"pepito1\",\r\n        \"apellido\": \"pepito1\",\r\n        \"matricula\": 1\r\n    },\r\n    \"paciente\": {\r\n        \"nombre\": \"pepito1\",\r\n        \"apellido\": \"pepito1\",\r\n        \"dni\": 22222,\r\n        \"fechaAlta\": \"2022-12-12\",\r\n        \"domicilio\": {\r\n            \"calle\": \"Fake St2.\",\r\n            \"numero\": 123,\r\n            \"localidad\": \"Remedios de Escalada\",\r\n            \"provincia\": \"Buenos Aires\",\r\n            \"pais\": \"Argentina\"\r\n        }\r\n    },\r\n    \"fecha\": \"2022-11-11\",\r\n    \"hora\": \"16:00:00\"\r\n}",
+							"raw": "{\r\n    \"odontologo\": {\r\n        \"nombre\": \"pepito2\",\r\n        \"apellido\": \"pepito2\",\r\n        \"matricula\": 3\r\n    },\r\n    \"paciente\": {\r\n        \"nombre\": \"pepito2\",\r\n        \"apellido\": \"pepito2\",\r\n        \"dni\": 22223,\r\n        \"fechaAlta\": \"2022-12-12\",\r\n        \"domicilio\": {\r\n            \"calle\": \"Fake St2.\",\r\n            \"numero\": 123,\r\n            \"localidad\": \"Remedios de Escalada\",\r\n            \"provincia\": \"Buenos Aires\",\r\n            \"pais\": \"Argentina\"\r\n        }\r\n    },\r\n    \"fecha\": \"2022-11-11\",\r\n    \"hora\": \"16:00:00\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -387,7 +387,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/turnos/odontologo/1",
+							"raw": "http://localhost:8080/turnos/odontologo/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -396,7 +396,7 @@
 							"path": [
 								"turnos",
 								"odontologo",
-								"1"
+								"3"
 							]
 						}
 					},
